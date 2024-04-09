@@ -1,2 +1,2 @@
 # sibi
-Backend for sibi with Prisma setup
+Backend for sibi with Express and Prisma(PoistreSQL) setup
