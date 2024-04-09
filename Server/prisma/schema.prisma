@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model itemsforsale {
+  id             Int       @id @default(autoincrement())
+  user_id        Int
+  description    String    @db.VarChar(255)
+  category       String    @db.VarChar(255)
+  brand          String?   @db.VarChar(255)
+  model          String?   @db.VarChar(255)
+  price          Decimal   @db.Decimal(100, 2)
+  date_posted    DateTime  @default(now()) @db.Timestamptz(6)
+  date_sold      DateTime? @db.Timestamp(6)
+  image_location String    @db.VarChar(800)
+  size           String?   @db.VarChar(10)
+  users          users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  reviews        reviews[]
+}
+
+model sold_items {
+  id        Int   @id @default(autoincrement())
+  seller_id Int
+  buyer_id  Int
+  seller    users @relation("seller", fields: [buyer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  buyer     users @relation("buyer", fields: [seller_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model reviews {
+  id           Int          @id @default(autoincrement())
+  user_id      Int
+  item_id      Int
+  review_text  String       @db.VarChar(255)
+  rating       Decimal      @db.Decimal(2, 1)
+  date_posted  DateTime     @default(now()) @db.Timestamptz(6)
+  itemsforsale itemsforsale @relation(fields: [item_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users        users        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id            Int            @id @default(autoincrement())
+  email         String         @unique @db.VarChar(255)
+  username      String         @unique @db.VarChar(255)
+  password      String         @db.VarChar(255)
+  rating        Decimal?       @db.Decimal(2, 1)
+  personal_info Json?
+  date_joined   DateTime       @default(now()) @db.Timestamptz(6)
+  itemsforsale  itemsforsale[]
+  reviews       reviews[]
+  seller        sold_items[]   @relation("seller")
+  buyer         sold_items[]   @relation("buyer")
+}
