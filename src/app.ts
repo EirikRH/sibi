@@ -6,8 +6,9 @@ dotenv.config();
 /*use for image handling - https://www.npmjs.com/package/multer*/
 
 import UserController from './classes/userControllerClass';
-import ItemController from './classes/itemControllerClass';
+import DatabaseItemController from './classes/itemControllerClass';
 import { NewUser, LoginAttempt } from './uitilities/types';
+import DatabaseItemFinder from './classes/itemFinderClass';
 
 const PORT = process.env.PORT!;
 
@@ -54,7 +55,7 @@ app.post('/login', async (req, res) => {
 app.post('/addNewItem', async (req, res) => {
   const { loginToken, newItem } = req.body;
   const user = new UserController();
-  const item = new ItemController();
+  const item = new DatabaseItemController();
 
   try {
     const validUserId = await user.validateLoginToken(loginToken);
@@ -69,7 +70,7 @@ app.post('/addNewItem', async (req, res) => {
 app.get('/getUserItems', async (req, res) => {
   const { loginToken } = req.body;
   const user = new UserController();
-  const items = new ItemController();
+  const items = new DatabaseItemFinder();
 
   try {
     const userId = await user.validateLoginToken(loginToken);
@@ -84,10 +85,10 @@ app.get('/getUserItems', async (req, res) => {
 app.get('/simpleSearch', async (req, res) => {
   const { searchString } = req.query;
 
-  const search = new ItemController();
+  const search = new DatabaseItemFinder();
 
   try {
-    const searchResult = await search.findItemsMatchingSimpleSearch(
+    const searchResult = await search.findItemsMatchingSearchString(
       searchString
     );
     res.status(200).json(searchResult);

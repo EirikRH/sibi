@@ -44,6 +44,7 @@ dotenv.config();
 /*use for image handling - https://www.npmjs.com/package/multer*/
 var userControllerClass_1 = require("./classes/userControllerClass");
 var itemControllerClass_1 = require("./classes/itemControllerClass");
+var itemFinderClass_1 = require("./classes/itemFinderClass");
 var PORT = process.env.PORT;
 var app = express();
 app.use(cors());
@@ -138,7 +139,7 @@ app.get('/getUserItems', function (req, res) { return __awaiter(void 0, void 0, 
             case 0:
                 loginToken = req.body.loginToken;
                 user = new userControllerClass_1.default();
-                items = new itemControllerClass_1.default();
+                items = new itemFinderClass_1.default();
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 4, , 5]);
@@ -164,11 +165,11 @@ app.get('/simpleSearch', function (req, res) { return __awaiter(void 0, void 0, 
         switch (_a.label) {
             case 0:
                 searchString = req.query.searchString;
-                search = new itemControllerClass_1.default();
+                search = new itemFinderClass_1.default();
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, search.findItemsMatchingSimpleSearch(searchString)];
+                return [4 /*yield*/, search.findItemsMatchingSearchString(searchString)];
             case 2:
                 searchResult = _a.sent();
                 res.status(200).json(searchResult);

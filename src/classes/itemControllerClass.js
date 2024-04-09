@@ -37,10 +37,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var database_1 = require("../services/database");
-var ItemController = /** @class */ (function () {
-    function ItemController() {
+;
+var DatabaseItemController = /** @class */ (function () {
+    function DatabaseItemController() {
     }
-    ItemController.prototype.addNewItemForSale = function (item, userId) {
+    DatabaseItemController.prototype.addNewItemForSale = function (item, userId) {
         return __awaiter(this, void 0, void 0, function () {
             var newItem, error_1;
             return __generator(this, function (_a) {
@@ -59,50 +60,6 @@ var ItemController = /** @class */ (function () {
             });
         });
     };
-    ItemController.prototype.findItemsMatchingSimpleSearch = function (searchString) {
-        return __awaiter(this, void 0, void 0, function () {
-            var searchResult, error_2;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, (0, database_1.simpleSearchItems)(searchString)];
-                    case 1:
-                        searchResult = _a.sent();
-                        if (searchResult.length < 1) {
-                            return [2 /*return*/, 'No items matching search'];
-                        }
-                        return [2 /*return*/, searchResult];
-                    case 2:
-                        error_2 = _a.sent();
-                        throw error_2;
-                    case 3: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    ItemController.prototype.findUserItems = function (userId) {
-        return __awaiter(this, void 0, void 0, function () {
-            var userItems, error_3;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, (0, database_1.findItemsListedByUser)(userId)];
-                    case 1:
-                        userItems = _a.sent();
-                        if (userItems.length < 1) {
-                            return [2 /*return*/, 'No listed items'];
-                        }
-                        return [2 /*return*/, userItems];
-                    case 2:
-                        error_3 = _a.sent();
-                        throw error_3;
-                    case 3: return [2 /*return*/];
-                }
-            });
-        });
-    };
-    return ItemController;
+    return DatabaseItemController;
 }());
-exports.default = ItemController;
+exports.default = DatabaseItemController;
