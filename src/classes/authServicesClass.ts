@@ -17,14 +17,14 @@ interface AuthServices {
 export default class UserAuthServices implements AuthServices {
   public async createLoginToken(credentials: LoginAttempt) {
     try {
-      const userFromLoginAttempt = await validateLoginCredentials(credentials);
+      const findUserFromLoginAttempt = await validateLoginCredentials(credentials);
 
-      if (!userFromLoginAttempt) {
+      if (!findUserFromLoginAttempt) {
         throw new Error('Invalid credentials');
       }
 
-      if (userFromLoginAttempt) {
-        return this.tokenFromValidLogin(userFromLoginAttempt);
+      if (findUserFromLoginAttempt) {
+        return this.tokenFromValidLogin(findUserFromLoginAttempt);
       }
     } catch (error) {
       throw error;

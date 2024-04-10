@@ -43,19 +43,19 @@ var UserAuthServices = /** @class */ (function () {
     }
     UserAuthServices.prototype.createLoginToken = function (credentials) {
         return __awaiter(this, void 0, void 0, function () {
-            var userFromLoginAttempt, error_1;
+            var findUserFromLoginAttempt, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, (0, database_1.validateLoginCredentials)(credentials)];
                     case 1:
-                        userFromLoginAttempt = _a.sent();
-                        if (!userFromLoginAttempt) {
+                        findUserFromLoginAttempt = _a.sent();
+                        if (!findUserFromLoginAttempt) {
                             throw new Error('Invalid credentials');
                         }
-                        if (userFromLoginAttempt) {
-                            return [2 /*return*/, this.tokenFromValidLogin(userFromLoginAttempt)];
+                        if (findUserFromLoginAttempt) {
+                            return [2 /*return*/, this.tokenFromValidLogin(findUserFromLoginAttempt)];
                         }
                         return [3 /*break*/, 3];
                     case 2:
