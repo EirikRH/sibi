@@ -36,20 +36,27 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var jsonwebtoken_1 = require("jsonwebtoken");
 var database_1 = require("../services/database");
-var UserController = /** @class */ (function () {
-    function UserController() {
+var UserAuthServices = /** @class */ (function () {
+    function UserAuthServices() {
     }
-    UserController.prototype.createNewUser = function (newUserDetails) {
+    UserAuthServices.prototype.createLoginToken = function (credentials) {
         return __awaiter(this, void 0, void 0, function () {
-            var error_1;
+            var userFromLoginAttempt, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, (0, database_1.addNewUserToDatabase)(newUserDetails)];
+                        return [4 /*yield*/, (0, database_1.validateLoginCredentials)(credentials)];
                     case 1:
-                        _a.sent();
+                        userFromLoginAttempt = _a.sent();
+                        if (!userFromLoginAttempt) {
+                            throw new Error('Invalid credentials');
+                        }
+                        if (userFromLoginAttempt) {
+                            return [2 /*return*/, this.tokenFromValidLogin(userFromLoginAttempt)];
+                        }
                         return [3 /*break*/, 3];
                     case 2:
                         error_1 = _a.sent();
@@ -59,6 +66,55 @@ var UserController = /** @class */ (function () {
             });
         });
     };
-    return UserController;
+    UserAuthServices.prototype.validateLoginToken = function (token) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userFromToken, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.matchTokenToExistingUser(token)];
+                    case 1:
+                        userFromToken = _a.sent();
+                        if (!userFromToken) {
+                            throw new Error('Invalid token');
+                        }
+                        return [2 /*return*/, userFromToken.id];
+                    case 2:
+                        error_2 = _a.sent();
+                        throw error_2;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    UserAuthServices.prototype.tokenFromValidLogin = function (validUser) {
+        var id = validUser.id, username = validUser.username;
+        var tokenContent = { id: id, username: username };
+        return this.createToken(tokenContent);
+    };
+    UserAuthServices.prototype.matchTokenToExistingUser = function (token) {
+        return __awaiter(this, void 0, void 0, function () {
+            var decodedToken, userCheck;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        decodedToken = this.decodeToken(token);
+                        return [4 /*yield*/, (0, database_1.findUserFromLoginToken)(decodedToken)];
+                    case 1:
+                        userCheck = _a.sent();
+                        return [2 /*return*/, userCheck];
+                }
+            });
+        });
+    };
+    UserAuthServices.prototype.decodeToken = function (token) {
+        return jsonwebtoken_1.default.verify(token, Buffer.from(process.env.SECRET_KEY, 'base64'));
+    };
+    UserAuthServices.prototype.createToken = function (tokenContent) {
+        var token = jsonwebtoken_1.default.sign(tokenContent, Buffer.from(process.env.SECRET_KEY, 'base64'));
+        return token;
+    };
+    return UserAuthServices;
 }());
-exports.default = UserController;
+exports.default = UserAuthServices;

@@ -56,6 +56,5 @@ export type LoginAttempt = {
 };
 export type TokenContent = {
   id: number;
-  email: string;
-  password: string;
+  username: string;
 };

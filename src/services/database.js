@@ -120,19 +120,18 @@ function validateLoginCredentials(credentials) {
 exports.validateLoginCredentials = validateLoginCredentials;
 function findUserFromLoginToken(decodedToken) {
     return __awaiter(this, void 0, void 0, function () {
-        var id, email, password, userFromTokenContent, error_3;
+        var id, username, userFromTokenContent, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    id = decodedToken.id, email = decodedToken.email, password = decodedToken.password;
+                    id = decodedToken.id, username = decodedToken.username;
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, 4, 6]);
                     return [4 /*yield*/, prisma.users.findUnique({
                             where: {
                                 id: id,
-                                email: email,
-                                password: password,
+                                username: username,
                             },
                         })];
                 case 2:

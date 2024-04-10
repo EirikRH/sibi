@@ -9,6 +9,7 @@ import UserController from './classes/userControllerClass';
 import DatabaseItemController from './classes/itemControllerClass';
 import { NewUser, LoginAttempt } from './uitilities/types';
 import DatabaseItemFinder from './classes/itemFinderClass';
+import UserAuthServices from './classes/authServicesClass';
 
 const PORT = process.env.PORT!;
 
@@ -42,10 +43,10 @@ app.post('/createUser', async (req, res) => {
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   const credentials: LoginAttempt = { email, password };
-  const user = new UserController();
+  const tokenHandler = new UserAuthServices();
 
   try {
-    const loginToken = await user.createLoginToken(credentials);
+    const loginToken = await tokenHandler.createLoginToken(credentials);
     res.status(200).json({ loginToken });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -54,11 +55,11 @@ app.post('/login', async (req, res) => {
 
 app.post('/addNewItem', async (req, res) => {
   const { loginToken, newItem } = req.body;
-  const user = new UserController();
+  const tokenHandler = new UserAuthServices();
   const item = new DatabaseItemController();
 
   try {
-    const validUserId = await user.validateLoginToken(loginToken);
+    const validUserId = await tokenHandler.validateLoginToken(loginToken);
     const listedItem = await item.addNewItemForSale(newItem, validUserId);
 
     res.status(200).json({ progress: 'Item listed', listedItem });
@@ -69,11 +70,11 @@ app.post('/addNewItem', async (req, res) => {
 
 app.get('/getUserItems', async (req, res) => {
   const { loginToken } = req.body;
-  const user = new UserController();
+  const tokenHandler = new UserAuthServices();
   const items = new DatabaseItemFinder();
 
   try {
-    const userId = await user.validateLoginToken(loginToken);
+    const userId = await tokenHandler.validateLoginToken(loginToken);
     const userItems = await items.findUserItems(userId);
 
     res.status(200).json(userItems);
@@ -84,11 +85,10 @@ app.get('/getUserItems', async (req, res) => {
 
 app.get('/simpleSearch', async (req, res) => {
   const { searchString } = req.query;
-
-  const search = new DatabaseItemFinder();
+  const items = new DatabaseItemFinder();
 
   try {
-    const searchResult = await search.findItemsMatchingSearchString(
+    const searchResult = await items.findItemsMatchingSearchString(
       searchString
     );
     res.status(200).json(searchResult);

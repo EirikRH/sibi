@@ -70,14 +70,13 @@ async function validateLoginCredentials(
 async function findUserFromLoginToken(
   decodedToken: TokenContent
 ): Promise<ExistingUser> {
-  const { id, email, password } = decodedToken;
+  const { id, username } = decodedToken;
 
   try {
     const userFromTokenContent = await prisma.users.findUnique({
       where: {
         id,
-        email,
-        password,
+        username,
       },
     });
 
