@@ -3,14 +3,18 @@ import {
   findUserFromLoginToken,
   validateLoginCredentials,
 } from '../services/database';
-import { ExistingUser, LoginAttempt, TokenContent } from '../uitilities/types';
+import {
+  ExistingUser,
+  LoginAttempt,
+  TokenContent,
+} from '../uitilities/globalInterfaces';
 
 interface AuthServices {
   createLoginToken(credentials: LoginAttempt): Promise<string>;
   validateLoginToken(token: string): Promise<number>;
 }
 
-export default class UserAuthServices implements AuthServices{
+export default class UserAuthServices implements AuthServices {
   public async createLoginToken(credentials: LoginAttempt) {
     try {
       const userFromLoginAttempt = await validateLoginCredentials(credentials);

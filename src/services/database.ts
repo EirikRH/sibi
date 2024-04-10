@@ -23,7 +23,7 @@ import {
   NewItem,
   ExistingItem,
   AdvancedSearchTerms,
-} from '../uitilities/types';
+} from '../uitilities/globalInterfaces';
 
 async function addNewUserToDatabase(
   newUserDetails: NewUser

@@ -37,7 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var database_1 = require("../services/database");
-;
 var DatabaseItemController = /** @class */ (function () {
     function DatabaseItemController() {
     }

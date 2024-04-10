@@ -1,4 +1,4 @@
-import { NewUser } from '../uitilities/types';
+import { NewUser } from '../uitilities/globalInterfaces';
 import { addNewUserToDatabase } from '../services/database';
 
 export default class UserController {

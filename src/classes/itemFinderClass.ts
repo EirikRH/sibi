@@ -1,5 +1,5 @@
 import { findItemsListedByUser, simpleSearchItems } from '../services/database';
-import { ExistingItem } from '../uitilities/types';
+import { ExistingItem } from '../uitilities/globalInterfaces';
 
 interface ItemFinder {
   findItemsMatchingSearchString(

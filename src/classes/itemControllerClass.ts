@@ -1,12 +1,11 @@
 import { addNewItemToDatabase } from '../services/database';
-import { ExistingItem, NewItem } from '../uitilities/types';
+import { ExistingItem, NewItem } from '../uitilities/globalInterfaces';
 
 interface ItemController {
   addNewItemForSale(item: NewItem, userId: number): Promise<ExistingItem>;
+}
 
-};
-
-export default class DatabaseItemController implements ItemController{
+export default class DatabaseItemController implements ItemController {
   public async addNewItemForSale(
     item: NewItem,
     userId: number

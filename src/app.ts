@@ -7,7 +7,7 @@ dotenv.config();
 
 import UserController from './classes/userControllerClass';
 import DatabaseItemController from './classes/itemControllerClass';
-import { NewUser, LoginAttempt } from './uitilities/types';
+import { NewUser, LoginAttempt } from './uitilities/globalInterfaces';
 import DatabaseItemFinder from './classes/itemFinderClass';
 import UserAuthServices from './classes/authServicesClass';
 

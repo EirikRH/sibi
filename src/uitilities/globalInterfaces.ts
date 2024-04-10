@@ -1,6 +1,6 @@
 import { Decimal, JsonValue } from '@prisma/client/runtime/library';
 
-export type ExistingItem = {
+export interface ExistingItem {
   id: number;
   user_id: number;
   date_posted: Date;
@@ -12,9 +12,9 @@ export type ExistingItem = {
   brand?: string | null;
   model?: string | null;
   date_sold?: Date | null;
-};
+}
 
-export type NewItem = {
+export interface NewItem {
   image_location: string;
   description: string;
   category: string;
@@ -23,17 +23,17 @@ export type NewItem = {
   brand?: string;
   model?: string;
   size?: string;
-};
+}
 
-export type AdvancedSearchTerms = {
+export interface AdvancedSearchTerms {
   category?: string;
   brand?: string;
   model?: string;
   size?: string;
   description: string;
-};
+}
 
-export type ExistingUser = {
+export interface ExistingUser {
   id: number;
   username: string;
   email: string;
@@ -42,19 +42,19 @@ export type ExistingUser = {
 
   rating: Decimal | null;
   personal_info: JsonValue | null;
-};
+}
 
-export type NewUser = {
+export interface NewUser {
   username: string;
   email: string;
   password: string;
-};
+}
 
-export type LoginAttempt = {
+export interface LoginAttempt {
   email: string;
   password: string;
-};
-export type TokenContent = {
+}
+export interface TokenContent {
   id: number;
   username: string;
-};
+}
