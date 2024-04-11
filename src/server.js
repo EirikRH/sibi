@@ -79,9 +79,7 @@ app.post('/createUser', function (req, res) { return __awaiter(void 0, void 0, v
                     errorMessage = "User with this ".concat(error_1.meta.target[0], " already exists");
                     statusCode = 400;
                 }
-                res
-                    .status(statusCode)
-                    .json({ error: errorMessage, field: error_1.meta.target[0] });
+                res.status(statusCode).json({ error: errorMessage, field: error_1.meta.target[0] });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }

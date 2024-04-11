@@ -39,9 +39,7 @@ app.post('/createUser', async (req, res) => {
       errorMessage = `User with this ${error.meta.target[0]} already exists`;
       statusCode = 400;
     }
-    res
-      .status(statusCode)
-      .json({ error: errorMessage, field: error.meta.target[0] });
+    res.status(statusCode).json({ error: errorMessage, field: error.meta.target[0] });
   }
 });
 
@@ -50,9 +48,7 @@ app.post('/login', async (req, res) => {
   const credentials = { email, password };
 
   try {
-    const loginToken = await authServices.createLoginTokenIfValidCredentials(
-      credentials
-    );
+    const loginToken = await authServices.createLoginTokenIfValidCredentials(credentials);
     res.status(200).json({ loginToken });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -64,10 +60,7 @@ app.post('/addNewItem', async (req, res) => {
 
   try {
     const validToken = await authServices.validateLoginToken(loginToken);
-    const listedItem = await itemController.addNewItemForSale(
-      newItem,
-      validToken.id
-    );
+    const listedItem = await itemController.addNewItemForSale(newItem, validToken.id);
 
     res.status(200).json({ progress: 'Item listed', listedItem });
   } catch (error) {
@@ -92,9 +85,7 @@ app.get('/simpleSearch', async (req, res) => {
   const { searchString } = req.query;
 
   try {
-    const searchResult = await itemFinder.findItemsMatchingSearchString(
-      searchString
-    );
+    const searchResult = await itemFinder.findItemsMatchingSearchString(searchString);
     res.status(200).json(searchResult);
   } catch (error) {
     return res.status(500).json(error);
