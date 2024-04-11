@@ -5,7 +5,7 @@ import {
 } from '../uitilities/globalInterfaces';
 import {
   addNewUserToDatabase,
-  deleteUserFromDatabase,
+  attemptDeleteUserFromDatabase,
   updateUserDetailsInDatabase,
 } from '../services/database';
 import UserAuthServices from './authServicesClass';
@@ -35,7 +35,7 @@ export default class CrudUserController implements UserController {
     const authService = new UserAuthServices(tokenDecoder);
     const tokenContent = await authService.validateLoginToken(token);
     try {
-      await deleteUserFromDatabase(tokenContent, email, password);
+      await attemptDeleteUserFromDatabase(tokenContent, email, password);
     } catch (error) {
       throw error;
     }

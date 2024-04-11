@@ -4,8 +4,8 @@ import { ExistingItem } from '../uitilities/globalInterfaces';
 export interface ItemFinder {
   findItemsMatchingSearchString(
     searchString: string
-  ): Promise<string | ExistingItem[]>;
-  findUserItems(userId: number): Promise<string | ExistingItem[]>;
+  ): Promise<ExistingItem[] | string>;
+  findUserItems(userId: number): Promise<ExistingItem[] | string>;
 }
 
 export default class DatabaseItemFinder implements ItemFinder {

@@ -83,7 +83,7 @@ var CrudUserController = /** @class */ (function () {
                         _a.label = 2;
                     case 2:
                         _a.trys.push([2, 4, , 5]);
-                        return [4 /*yield*/, (0, database_1.deleteUserFromDatabase)(tokenContent, email, password)];
+                        return [4 /*yield*/, (0, database_1.attemptDeleteUserFromDatabase)(tokenContent, email, password)];
                     case 3:
                         _a.sent();
                         return [3 /*break*/, 5];

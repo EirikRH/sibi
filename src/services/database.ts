@@ -47,7 +47,7 @@ export async function addNewUserToDatabase(
     await prisma.$disconnect();
   }
 }
-export async function deleteUserFromDatabase(
+export async function attemptDeleteUserFromDatabase(
   tokenContent: TokenContent,
   email: string,
   password: string

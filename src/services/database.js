@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.simpleSearchItems = exports.findItemsListedByUser = exports.addNewItemToDatabase = exports.findUserFromLoginToken = exports.validateLoginCredentials = exports.updateUserDetailsInDatabase = exports.deleteUserFromDatabase = exports.addNewUserToDatabase = void 0;
+exports.simpleSearchItems = exports.findItemsListedByUser = exports.addNewItemToDatabase = exports.findUserFromLoginToken = exports.validateLoginCredentials = exports.updateUserDetailsInDatabase = exports.attemptDeleteUserFromDatabase = exports.addNewUserToDatabase = void 0;
 /*
   NEEDS:
   getItemByItemId - to view or edit a single item
@@ -86,7 +86,7 @@ function addNewUserToDatabase(newUserDetails) {
     });
 }
 exports.addNewUserToDatabase = addNewUserToDatabase;
-function deleteUserFromDatabase(tokenContent, email, password) {
+function attemptDeleteUserFromDatabase(tokenContent, email, password) {
     return __awaiter(this, void 0, void 0, function () {
         var userToDelete, error_2;
         return __generator(this, function (_a) {
@@ -124,7 +124,7 @@ function deleteUserFromDatabase(tokenContent, email, password) {
         });
     });
 }
-exports.deleteUserFromDatabase = deleteUserFromDatabase;
+exports.attemptDeleteUserFromDatabase = attemptDeleteUserFromDatabase;
 function updateUserDetailsInDatabase(userId, detailsToUpdate) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
