@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var jsonwebtoken_1 = require("jsonwebtoken");
+var jwt = require('jsonwebtoken');
 var database_1 = require("../services/database");
 var UserAuthServices = /** @class */ (function () {
     function UserAuthServices() {
@@ -109,10 +109,10 @@ var UserAuthServices = /** @class */ (function () {
         });
     };
     UserAuthServices.prototype.decodeToken = function (token) {
-        return jsonwebtoken_1.default.verify(token, Buffer.from(process.env.SECRET_KEY, 'base64'));
+        return jwt.verify(token, Buffer.from(process.env.SECRET_KEY, 'base64'));
     };
     UserAuthServices.prototype.createToken = function (tokenContent) {
-        var token = jsonwebtoken_1.default.sign(tokenContent, Buffer.from(process.env.SECRET_KEY, 'base64'));
+        var token = jwt.sign(tokenContent, Buffer.from(process.env.SECRET_KEY, 'base64'));
         return token;
     };
     return UserAuthServices;
