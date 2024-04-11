@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 /*use for image handling - https://www.npmjs.com/package/multer*/
 
-import UserController from './classes/userControllerClass';
+import CrudUserController from './classes/userControllerClass';
 import DatabaseItemController from './classes/itemControllerClass';
 import { NewUser, LoginAttempt } from './uitilities/globalInterfaces';
 import DatabaseItemFinder from './classes/itemFinderClass';
@@ -20,7 +20,7 @@ app.use(express.json());
 app.post('/createUser', async (req, res) => {
   const { username, password, email } = req.body;
   const newUserData: NewUser = { username, password, email };
-  const user = new UserController();
+  const user = new CrudUserController();
 
   try {
     await user.createNewUser(newUserData);
