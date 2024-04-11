@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 import {
   findUserFromLoginToken,
   validateLoginCredentials,
@@ -8,14 +7,25 @@ import {
   LoginAttempt,
   TokenContent,
 } from '../uitilities/globalInterfaces';
+import { TokenController } from './tokenControllerClass';
 
-interface AuthServices {
-  createLoginToken(credentials: LoginAttempt): Promise<string>;
-  validateLoginToken(token: string): Promise<number>;
+export interface AuthServices {
+  createLoginTokenIfValidCredentials(
+    credentials: LoginAttempt
+  ): Promise<string>;
+  validateLoginToken(token: string): Promise<TokenContent>;
 }
 
 export default class UserAuthServices implements AuthServices {
-  public async createLoginToken(credentials: LoginAttempt) {
+  private readonly tokenController: TokenController;
+
+  constructor(tokenController: TokenController) {
+    this.tokenController = tokenController;
+  }
+
+  public async createLoginTokenIfValidCredentials(
+    credentials: LoginAttempt
+  ): Promise<string> {
     try {
       const findUserFromLoginAttempt = await validateLoginCredentials(
         credentials
@@ -25,48 +35,36 @@ export default class UserAuthServices implements AuthServices {
         throw new Error('Invalid credentials');
       }
 
-      if (findUserFromLoginAttempt) {
-        return this.tokenFromValidLogin(findUserFromLoginAttempt);
-      }
+      return this.createTokenFromValidLogin(findUserFromLoginAttempt);
     } catch (error) {
       throw error;
     }
   }
 
-  public async validateLoginToken(token: string): Promise<number> {
+  public async validateLoginToken(token: string): Promise<TokenContent> {
     try {
       const userFromToken: ExistingUser | null =
         await this.matchTokenToExistingUser(token);
       if (!userFromToken) {
         throw new Error('Invalid token');
       }
-      return userFromToken.id;
+      const { id, username } = userFromToken;
+      const tokenContent: TokenContent = { id, username };
+      return tokenContent;
     } catch (error) {
       throw error;
     }
   }
 
-  private tokenFromValidLogin(validUser: ExistingUser) {
+  private createTokenFromValidLogin(validUser: ExistingUser) {
     const { id, username } = validUser;
     const tokenContent: TokenContent = { id, username };
-    return this.createToken(tokenContent);
+    return this.tokenController.createToken(tokenContent);
   }
 
   private async matchTokenToExistingUser(token: string) {
-    const decodedToken = this.decodeToken(token);
+    const decodedToken = this.tokenController.decodeToken(token);
     const userCheck = await findUserFromLoginToken(decodedToken);
     return userCheck;
-  }
-
-  private decodeToken(token: string) {
-    return jwt.verify(token, Buffer.from(process.env.SECRET_KEY!, 'base64'));
-  }
-
-  private createToken(tokenContent: TokenContent) {
-    const token = jwt.sign(
-      tokenContent,
-      Buffer.from(process.env.SECRET_KEY!, 'base64')
-    );
-    return token;
   }
 }

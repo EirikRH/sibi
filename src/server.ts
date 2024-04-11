@@ -6,10 +6,16 @@ dotenv.config();
 /*use for image handling - https://www.npmjs.com/package/multer*/
 
 import CrudUserController from './classes/userControllerClass';
-import DatabaseItemController from './classes/itemControllerClass';
-import { NewUser, LoginAttempt } from './uitilities/globalInterfaces';
-import DatabaseItemFinder from './classes/itemFinderClass';
+import CrudItemController from './classes/itemControllerClass';
 import UserAuthServices from './classes/authServicesClass';
+import JwtTokenController from './classes/tokenControllerClass';
+import DatabaseItemFinder from './classes/itemFinderClass';
+
+const tokenController = new JwtTokenController(process.env.SECRET_KEY!);
+const authServices = new UserAuthServices(tokenController);
+const itemController = new CrudItemController();
+const userController = new CrudUserController();
+const itemFinder = new DatabaseItemFinder();
 
 const PORT = process.env.PORT!;
 
@@ -19,11 +25,10 @@ app.use(express.json());
 
 app.post('/createUser', async (req, res) => {
   const { username, password, email } = req.body;
-  const newUserData: NewUser = { username, password, email };
-  const user = new CrudUserController();
+  const newUserData = { username, password, email };
 
   try {
-    await user.createNewUser(newUserData);
+    await userController.createNewUser(newUserData);
 
     res.status(200).json({ message: 'User created' });
   } catch (error) {
@@ -42,11 +47,12 @@ app.post('/createUser', async (req, res) => {
 
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  const credentials: LoginAttempt = { email, password };
-  const tokenHandler = new UserAuthServices();
+  const credentials = { email, password };
 
   try {
-    const loginToken = await tokenHandler.createLoginToken(credentials);
+    const loginToken = await authServices.createLoginTokenIfValidCredentials(
+      credentials
+    );
     res.status(200).json({ loginToken });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -55,12 +61,13 @@ app.post('/login', async (req, res) => {
 
 app.post('/addNewItem', async (req, res) => {
   const { loginToken, newItem } = req.body;
-  const tokenHandler = new UserAuthServices();
-  const item = new DatabaseItemController();
 
   try {
-    const validUserId = await tokenHandler.validateLoginToken(loginToken);
-    const listedItem = await item.addNewItemForSale(newItem, validUserId);
+    const validToken = await authServices.validateLoginToken(loginToken);
+    const listedItem = await itemController.addNewItemForSale(
+      newItem,
+      validToken.id
+    );
 
     res.status(200).json({ progress: 'Item listed', listedItem });
   } catch (error) {
@@ -70,12 +77,10 @@ app.post('/addNewItem', async (req, res) => {
 
 app.get('/getUserItems', async (req, res) => {
   const { loginToken } = req.body;
-  const tokenHandler = new UserAuthServices();
-  const items = new DatabaseItemFinder();
 
   try {
-    const userId = await tokenHandler.validateLoginToken(loginToken);
-    const userItems = await items.findUserItems(userId);
+    const validToken = await authServices.validateLoginToken(loginToken);
+    const userItems = await itemFinder.findUserItems(validToken.id);
 
     res.status(200).json(userItems);
   } catch (error) {
@@ -85,10 +90,9 @@ app.get('/getUserItems', async (req, res) => {
 
 app.get('/simpleSearch', async (req, res) => {
   const { searchString } = req.query;
-  const items = new DatabaseItemFinder();
 
   try {
-    const searchResult = await items.findItemsMatchingSearchString(
+    const searchResult = await itemFinder.findItemsMatchingSearchString(
       searchString
     );
     res.status(200).json(searchResult);

@@ -1,10 +1,20 @@
-import { ExistingUser, NewUser } from '../uitilities/globalInterfaces';
-import { addNewUserToDatabase } from '../services/database';
+import {
+  ExistingUser,
+  NewUser,
+  UserDeletionRequest,
+} from '../uitilities/globalInterfaces';
+import {
+  addNewUserToDatabase,
+  deleteUserFromDatabase,
+  updateUserDetailsInDatabase,
+} from '../services/database';
+import UserAuthServices from './authServicesClass';
+import JwtTokenController from './tokenControllerClass';
 
-interface UserController {
-  createNewUser(newUserDetails: NewUser): void;
-  updateUserDetails(updatedUserDetails: ExistingUser): void;
-  deleteUser(userId: number): void;
+export interface UserController {
+  createNewUser(newUserDetails: NewUser): Promise<void>;
+  updateUserDetails(updatedUserDetails: ExistingUser): Promise<void>;
+  deleteUser(deletionRequest: UserDeletionRequest): Promise<void>;
 }
 export default class CrudUserController implements UserController {
   public async createNewUser(newUserDetails: NewUser) {
@@ -14,10 +24,20 @@ export default class CrudUserController implements UserController {
       throw error;
     }
   }
-  updateUserDetails(updatedUserDetails: ExistingUser): void {
+  public async updateUserDetails(
+    updatedUserDetails: ExistingUser
+  ): Promise<void> {
     throw new Error('Method not implemented.');
   }
-  deleteUser(userId: number): void {
-    throw new Error('Method not implemented.');
+  public async deleteUser(deletionRequest: UserDeletionRequest): Promise<void> {
+    const { token, email, password } = deletionRequest;
+    const tokenDecoder = new JwtTokenController(process.env.SECRET_KEY!);
+    const authService = new UserAuthServices(tokenDecoder);
+    const tokenContent = await authService.validateLoginToken(token);
+    try {
+      await deleteUserFromDatabase(tokenContent, email, password);
+    } catch (error) {
+      throw error;
+    }
   }
 }

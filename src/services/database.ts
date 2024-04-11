@@ -23,9 +23,10 @@ import {
   NewItem,
   ExistingItem,
   AdvancedSearchTerms,
+  UpdatableUserDetails,
 } from '../uitilities/globalInterfaces';
 
-async function addNewUserToDatabase(
+export async function addNewUserToDatabase(
   newUserDetails: NewUser
 ): Promise<ExistingUser> {
   const { username, password, email } = newUserDetails;
@@ -46,8 +47,21 @@ async function addNewUserToDatabase(
     await prisma.$disconnect();
   }
 }
-
-async function validateLoginCredentials(
+export async function deleteUserFromDatabase(
+  tokenContent: TokenContent,
+  email: string,
+  password: string
+) {
+  //add user to deletedusers table then..
+  await prisma.users.delete({ where: { id: tokenContent.id } });
+}
+export async function updateUserDetailsInDatabase(
+  userId: number,
+  detailsToUpdate: UpdatableUserDetails
+) {
+  //form submitted details for updating into query, then run query on.
+}
+export async function validateLoginCredentials(
   credentials: LoginAttempt
 ): Promise<ExistingUser | null> {
   const { email, password } = credentials;
@@ -67,7 +81,7 @@ async function validateLoginCredentials(
   }
 }
 
-async function findUserFromLoginToken(
+export async function findUserFromLoginToken(
   decodedToken: TokenContent
 ): Promise<ExistingUser> {
   const { id, username } = decodedToken;
@@ -91,7 +105,7 @@ async function findUserFromLoginToken(
   }
 }
 
-async function addNewItemToDatabase(
+export async function addNewItemToDatabase(
   item: NewItem,
   userId: number
 ): Promise<ExistingItem> {
@@ -117,7 +131,9 @@ async function addNewItemToDatabase(
   }
 }
 
-async function findItemsListedByUser(userId: number): Promise<ExistingItem[]> {
+export async function findItemsListedByUser(
+  userId: number
+): Promise<ExistingItem[]> {
   try {
     const userItems = await prisma.itemsforsale.findMany({
       where: { user_id: userId },
@@ -130,7 +146,7 @@ async function findItemsListedByUser(userId: number): Promise<ExistingItem[]> {
   }
 }
 
-async function simpleSearchItems(
+export async function simpleSearchItems(
   searchString: string
 ): Promise<ExistingItem[]> {
   const searchWords: string[] = searchString.split(' ');
@@ -157,12 +173,15 @@ async function simpleSearchItems(
     await prisma.$disconnect();
   }
 }
-
+/* 
 export {
   addNewUserToDatabase,
+  deleteUserFromDatabase,
+  updateUserDetailsInDatabase,
   validateLoginCredentials,
   findUserFromLoginToken,
   addNewItemToDatabase,
   simpleSearchItems,
   findItemsListedByUser,
 };
+ */

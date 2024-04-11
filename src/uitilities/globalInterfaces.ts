@@ -44,6 +44,17 @@ export interface ExistingUser {
   personal_info: JsonValue | null;
 }
 
+export interface UpdatableUserDetails {
+  password: string;
+  email: string;
+}
+
+export interface UserDeletionRequest{
+  password: string;
+  email: string;
+  token: string;
+}
+
 export interface NewUser {
   username: string;
   email: string;

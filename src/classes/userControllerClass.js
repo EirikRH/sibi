@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var database_1 = require("../services/database");
+var authServicesClass_1 = require("./authServicesClass");
 var CrudUserController = /** @class */ (function () {
     function CrudUserController() {
     }
@@ -60,10 +61,37 @@ var CrudUserController = /** @class */ (function () {
         });
     };
     CrudUserController.prototype.updateUserDetails = function (updatedUserDetails) {
-        throw new Error('Method not implemented.');
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                throw new Error('Method not implemented.');
+            });
+        });
     };
-    CrudUserController.prototype.deleteUser = function (userId) {
-        throw new Error('Method not implemented.');
+    CrudUserController.prototype.deleteUser = function (deletionRequest) {
+        return __awaiter(this, void 0, void 0, function () {
+            var token, email, password, tokenDecoder, tokenContent, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        token = deletionRequest.token, email = deletionRequest.email, password = deletionRequest.password;
+                        tokenDecoder = new authServicesClass_1.default();
+                        return [4 /*yield*/, tokenDecoder.validateLoginToken(token)];
+                    case 1:
+                        tokenContent = _a.sent();
+                        _a.label = 2;
+                    case 2:
+                        _a.trys.push([2, 4, , 5]);
+                        return [4 /*yield*/, (0, database_1.deleteUserFromDatabase)(tokenContent, email, password)];
+                    case 3:
+                        _a.sent();
+                        return [3 /*break*/, 5];
+                    case 4:
+                        error_2 = _a.sent();
+                        throw error_2;
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
     };
     return CrudUserController;
 }());

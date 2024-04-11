@@ -1,7 +1,7 @@
 import { findItemsListedByUser, simpleSearchItems } from '../services/database';
 import { ExistingItem } from '../uitilities/globalInterfaces';
 
-interface ItemFinder {
+export interface ItemFinder {
   findItemsMatchingSearchString(
     searchString: string
   ): Promise<string | ExistingItem[]>;

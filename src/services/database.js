@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findItemsListedByUser = exports.simpleSearchItems = exports.addNewItemToDatabase = exports.findUserFromLoginToken = exports.validateLoginCredentials = exports.addNewUserToDatabase = void 0;
+exports.simpleSearchItems = exports.findItemsListedByUser = exports.addNewItemToDatabase = exports.findUserFromLoginToken = exports.validateLoginCredentials = exports.updateUserDetailsInDatabase = exports.deleteUserFromDatabase = exports.addNewUserToDatabase = void 0;
 /*
   NEEDS:
   getItemByItemId - to view or edit a single item
@@ -86,6 +86,30 @@ function addNewUserToDatabase(newUserDetails) {
     });
 }
 exports.addNewUserToDatabase = addNewUserToDatabase;
+function deleteUserFromDatabase(userId, email, password) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: 
+                //add user to deletedusers table then..
+                return [4 /*yield*/, prisma.users.delete({ where: { id: userId } })];
+                case 1:
+                    //add user to deletedusers table then..
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.deleteUserFromDatabase = deleteUserFromDatabase;
+function updateUserDetailsInDatabase(userId, detailsToUpdate) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/];
+        });
+    });
+}
+exports.updateUserDetailsInDatabase = updateUserDetailsInDatabase;
 function validateLoginCredentials(credentials) {
     return __awaiter(this, void 0, void 0, function () {
         var email, password, user, error_2;
@@ -251,3 +275,15 @@ function simpleSearchItems(searchString) {
     });
 }
 exports.simpleSearchItems = simpleSearchItems;
+/*
+export {
+  addNewUserToDatabase,
+  deleteUserFromDatabase,
+  updateUserDetailsInDatabase,
+  validateLoginCredentials,
+  findUserFromLoginToken,
+  addNewItemToDatabase,
+  simpleSearchItems,
+  findItemsListedByUser,
+};
+ */

@@ -55,7 +55,7 @@ var UserAuthServices = /** @class */ (function () {
                             throw new Error('Invalid credentials');
                         }
                         if (findUserFromLoginAttempt) {
-                            return [2 /*return*/, this.tokenFromValidLogin(findUserFromLoginAttempt)];
+                            return [2 /*return*/, this.createTokenFromValidLogin(findUserFromLoginAttempt)];
                         }
                         return [3 /*break*/, 3];
                     case 2:
@@ -88,7 +88,7 @@ var UserAuthServices = /** @class */ (function () {
             });
         });
     };
-    UserAuthServices.prototype.tokenFromValidLogin = function (validUser) {
+    UserAuthServices.prototype.createTokenFromValidLogin = function (validUser) {
         var id = validUser.id, username = validUser.username;
         var tokenContent = { id: id, username: username };
         return this.createToken(tokenContent);
