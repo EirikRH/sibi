@@ -52,8 +52,26 @@ export async function deleteUserFromDatabase(
   email: string,
   password: string
 ) {
-  //add user to deletedusers table then..
-  await prisma.users.delete({ where: { id: tokenContent.id } });
+  try {
+    const userToDelete = await prisma.users.findUnique({
+      where: {
+        id: tokenContent.id,
+        username: tokenContent.username,
+        email: email,
+        password: password,
+      },
+    });
+
+    if (!userToDelete) {
+      throw new Error('No user matching delete request');
+    }
+    //add user to deletedusers table, then..
+    await prisma.users.delete({ where: { id: tokenContent.id } });
+  } catch (error) {
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
 }
 export async function updateUserDetailsInDatabase(
   userId: number,
@@ -173,15 +191,3 @@ export async function simpleSearchItems(
     await prisma.$disconnect();
   }
 }
-/* 
-export {
-  addNewUserToDatabase,
-  deleteUserFromDatabase,
-  updateUserDetailsInDatabase,
-  validateLoginCredentials,
-  findUserFromLoginToken,
-  addNewItemToDatabase,
-  simpleSearchItems,
-  findItemsListedByUser,
-};
- */

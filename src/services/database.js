@@ -88,15 +88,38 @@ function addNewUserToDatabase(newUserDetails) {
 exports.addNewUserToDatabase = addNewUserToDatabase;
 function deleteUserFromDatabase(tokenContent, email, password) {
     return __awaiter(this, void 0, void 0, function () {
+        var userToDelete, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: 
-                //add user to deletedusers table then..
-                return [4 /*yield*/, prisma.users.delete({ where: { id: tokenContent.id } })];
+                case 0:
+                    _a.trys.push([0, 3, 4, 6]);
+                    return [4 /*yield*/, prisma.users.findUnique({
+                            where: {
+                                id: tokenContent.id,
+                                username: tokenContent.username,
+                                email: email,
+                                password: password,
+                            },
+                        })];
                 case 1:
-                    //add user to deletedusers table then..
+                    userToDelete = _a.sent();
+                    if (!userToDelete) {
+                        throw new Error('No user matching delete request');
+                    }
+                    //add user to deletedusers table, then..
+                    return [4 /*yield*/, prisma.users.delete({ where: { id: tokenContent.id } })];
+                case 2:
+                    //add user to deletedusers table, then..
                     _a.sent();
-                    return [2 /*return*/];
+                    return [3 /*break*/, 6];
+                case 3:
+                    error_2 = _a.sent();
+                    throw error_2;
+                case 4: return [4 /*yield*/, prisma.$disconnect()];
+                case 5:
+                    _a.sent();
+                    return [7 /*endfinally*/];
+                case 6: return [2 /*return*/];
             }
         });
     });
@@ -112,7 +135,7 @@ function updateUserDetailsInDatabase(userId, detailsToUpdate) {
 exports.updateUserDetailsInDatabase = updateUserDetailsInDatabase;
 function validateLoginCredentials(credentials) {
     return __awaiter(this, void 0, void 0, function () {
-        var email, password, user, error_2;
+        var email, password, user, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -130,8 +153,8 @@ function validateLoginCredentials(credentials) {
                     user = _a.sent();
                     return [2 /*return*/, user];
                 case 3:
-                    error_2 = _a.sent();
-                    throw error_2;
+                    error_3 = _a.sent();
+                    throw error_3;
                 case 4: return [4 /*yield*/, prisma.$disconnect()];
                 case 5:
                     _a.sent();
@@ -144,7 +167,7 @@ function validateLoginCredentials(credentials) {
 exports.validateLoginCredentials = validateLoginCredentials;
 function findUserFromLoginToken(decodedToken) {
     return __awaiter(this, void 0, void 0, function () {
-        var id, username, userFromTokenContent, error_3;
+        var id, username, userFromTokenContent, error_4;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -165,8 +188,8 @@ function findUserFromLoginToken(decodedToken) {
                     }
                     return [2 /*return*/, userFromTokenContent];
                 case 3:
-                    error_3 = _a.sent();
-                    throw error_3;
+                    error_4 = _a.sent();
+                    throw error_4;
                 case 4: return [4 /*yield*/, prisma.$disconnect()];
                 case 5:
                     _a.sent();
@@ -179,7 +202,7 @@ function findUserFromLoginToken(decodedToken) {
 exports.findUserFromLoginToken = findUserFromLoginToken;
 function addNewItemToDatabase(item, userId) {
     return __awaiter(this, void 0, void 0, function () {
-        var newItem, error_4;
+        var newItem, error_5;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -200,8 +223,8 @@ function addNewItemToDatabase(item, userId) {
                     newItem = _a.sent();
                     return [2 /*return*/, newItem];
                 case 2:
-                    error_4 = _a.sent();
-                    throw error_4;
+                    error_5 = _a.sent();
+                    throw error_5;
                 case 3: return [4 /*yield*/, prisma.$disconnect()];
                 case 4:
                     _a.sent();
@@ -214,7 +237,7 @@ function addNewItemToDatabase(item, userId) {
 exports.addNewItemToDatabase = addNewItemToDatabase;
 function findItemsListedByUser(userId) {
     return __awaiter(this, void 0, void 0, function () {
-        var userItems, error_5;
+        var userItems, error_6;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -226,8 +249,8 @@ function findItemsListedByUser(userId) {
                     userItems = _a.sent();
                     return [2 /*return*/, userItems];
                 case 2:
-                    error_5 = _a.sent();
-                    throw error_5;
+                    error_6 = _a.sent();
+                    throw error_6;
                 case 3: return [4 /*yield*/, prisma.$disconnect()];
                 case 4:
                     _a.sent();
@@ -240,7 +263,7 @@ function findItemsListedByUser(userId) {
 exports.findItemsListedByUser = findItemsListedByUser;
 function simpleSearchItems(searchString) {
     return __awaiter(this, void 0, void 0, function () {
-        var searchWords, searchResults, error_6;
+        var searchWords, searchResults, error_7;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -263,8 +286,8 @@ function simpleSearchItems(searchString) {
                     });
                     return [2 /*return*/, searchResults];
                 case 2:
-                    error_6 = _a.sent();
-                    throw error_6;
+                    error_7 = _a.sent();
+                    throw error_7;
                 case 3: return [4 /*yield*/, prisma.$disconnect()];
                 case 4:
                     _a.sent();
@@ -275,15 +298,3 @@ function simpleSearchItems(searchString) {
     });
 }
 exports.simpleSearchItems = simpleSearchItems;
-/*
-export {
-  addNewUserToDatabase,
-  deleteUserFromDatabase,
-  updateUserDetailsInDatabase,
-  validateLoginCredentials,
-  findUserFromLoginToken,
-  addNewItemToDatabase,
-  simpleSearchItems,
-  findItemsListedByUser,
-};
- */
