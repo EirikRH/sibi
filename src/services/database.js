@@ -86,13 +86,13 @@ function addNewUserToDatabase(newUserDetails) {
     });
 }
 exports.addNewUserToDatabase = addNewUserToDatabase;
-function deleteUserFromDatabase(userId, email, password) {
+function deleteUserFromDatabase(tokenContent, email, password) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: 
                 //add user to deletedusers table then..
-                return [4 /*yield*/, prisma.users.delete({ where: { id: userId } })];
+                return [4 /*yield*/, prisma.users.delete({ where: { id: tokenContent.id } })];
                 case 1:
                     //add user to deletedusers table then..
                     _a.sent();

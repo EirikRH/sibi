@@ -36,12 +36,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var jwt = require('jsonwebtoken');
 var database_1 = require("../services/database");
 var UserAuthServices = /** @class */ (function () {
-    function UserAuthServices() {
+    function UserAuthServices(tokenController) {
+        this.tokenController = tokenController;
     }
-    UserAuthServices.prototype.createLoginToken = function (credentials) {
+    UserAuthServices.prototype.createLoginTokenIfValidCredentials = function (credentials) {
         return __awaiter(this, void 0, void 0, function () {
             var findUserFromLoginAttempt, error_1;
             return __generator(this, function (_a) {
@@ -54,10 +54,7 @@ var UserAuthServices = /** @class */ (function () {
                         if (!findUserFromLoginAttempt) {
                             throw new Error('Invalid credentials');
                         }
-                        if (findUserFromLoginAttempt) {
-                            return [2 /*return*/, this.createTokenFromValidLogin(findUserFromLoginAttempt)];
-                        }
-                        return [3 /*break*/, 3];
+                        return [2 /*return*/, this.createTokenFromValidLogin(findUserFromLoginAttempt)];
                     case 2:
                         error_1 = _a.sent();
                         throw error_1;
@@ -68,7 +65,7 @@ var UserAuthServices = /** @class */ (function () {
     };
     UserAuthServices.prototype.validateLoginToken = function (token) {
         return __awaiter(this, void 0, void 0, function () {
-            var userFromToken, error_2;
+            var userFromToken, id, username, tokenContent, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -79,7 +76,9 @@ var UserAuthServices = /** @class */ (function () {
                         if (!userFromToken) {
                             throw new Error('Invalid token');
                         }
-                        return [2 /*return*/, userFromToken.id];
+                        id = userFromToken.id, username = userFromToken.username;
+                        tokenContent = { id: id, username: username };
+                        return [2 /*return*/, tokenContent];
                     case 2:
                         error_2 = _a.sent();
                         throw error_2;
@@ -91,7 +90,7 @@ var UserAuthServices = /** @class */ (function () {
     UserAuthServices.prototype.createTokenFromValidLogin = function (validUser) {
         var id = validUser.id, username = validUser.username;
         var tokenContent = { id: id, username: username };
-        return this.createToken(tokenContent);
+        return this.tokenController.createToken(tokenContent);
     };
     UserAuthServices.prototype.matchTokenToExistingUser = function (token) {
         return __awaiter(this, void 0, void 0, function () {
@@ -99,7 +98,7 @@ var UserAuthServices = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        decodedToken = this.decodeToken(token);
+                        decodedToken = this.tokenController.decodeToken(token);
                         return [4 /*yield*/, (0, database_1.findUserFromLoginToken)(decodedToken)];
                     case 1:
                         userCheck = _a.sent();
@@ -107,13 +106,6 @@ var UserAuthServices = /** @class */ (function () {
                 }
             });
         });
-    };
-    UserAuthServices.prototype.decodeToken = function (token) {
-        return jwt.verify(token, Buffer.from(process.env.SECRET_KEY, 'base64'));
-    };
-    UserAuthServices.prototype.createToken = function (tokenContent) {
-        var token = jwt.sign(tokenContent, Buffer.from(process.env.SECRET_KEY, 'base64'));
-        return token;
     };
     return UserAuthServices;
 }());

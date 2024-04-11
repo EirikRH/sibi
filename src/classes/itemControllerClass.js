@@ -37,10 +37,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var database_1 = require("../services/database");
-var DatabaseItemController = /** @class */ (function () {
-    function DatabaseItemController() {
+var CrudItemController = /** @class */ (function () {
+    function CrudItemController() {
     }
-    DatabaseItemController.prototype.addNewItemForSale = function (item, userId) {
+    CrudItemController.prototype.addNewItemForSale = function (item, userId) {
         return __awaiter(this, void 0, void 0, function () {
             var newItem, error_1;
             return __generator(this, function (_a) {
@@ -59,6 +59,6 @@ var DatabaseItemController = /** @class */ (function () {
             });
         });
     };
-    return DatabaseItemController;
+    return CrudItemController;
 }());
-exports.default = DatabaseItemController;
+exports.default = CrudItemController;

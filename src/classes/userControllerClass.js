@@ -38,6 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var database_1 = require("../services/database");
 var authServicesClass_1 = require("./authServicesClass");
+var tokenControllerClass_1 = require("./tokenControllerClass");
 var CrudUserController = /** @class */ (function () {
     function CrudUserController() {
     }
@@ -69,13 +70,14 @@ var CrudUserController = /** @class */ (function () {
     };
     CrudUserController.prototype.deleteUser = function (deletionRequest) {
         return __awaiter(this, void 0, void 0, function () {
-            var token, email, password, tokenDecoder, tokenContent, error_2;
+            var token, email, password, tokenDecoder, authService, tokenContent, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         token = deletionRequest.token, email = deletionRequest.email, password = deletionRequest.password;
-                        tokenDecoder = new authServicesClass_1.default();
-                        return [4 /*yield*/, tokenDecoder.validateLoginToken(token)];
+                        tokenDecoder = new tokenControllerClass_1.default(process.env.SECRET_KEY);
+                        authService = new authServicesClass_1.default(tokenDecoder);
+                        return [4 /*yield*/, authService.validateLoginToken(token)];
                     case 1:
                         tokenContent = _a.sent();
                         _a.label = 2;

@@ -44,24 +44,29 @@ dotenv.config();
 /*use for image handling - https://www.npmjs.com/package/multer*/
 var userControllerClass_1 = require("./classes/userControllerClass");
 var itemControllerClass_1 = require("./classes/itemControllerClass");
-var itemFinderClass_1 = require("./classes/itemFinderClass");
 var authServicesClass_1 = require("./classes/authServicesClass");
+var tokenControllerClass_1 = require("./classes/tokenControllerClass");
+var itemFinderClass_1 = require("./classes/itemFinderClass");
+var tokenController = new tokenControllerClass_1.default(process.env.SECRET_KEY);
+var authServices = new authServicesClass_1.default(tokenController);
+var itemController = new itemControllerClass_1.default();
+var userController = new userControllerClass_1.default();
+var itemFinder = new itemFinderClass_1.default();
 var PORT = process.env.PORT;
 var app = express();
 app.use(cors());
 app.use(express.json());
 app.post('/createUser', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, username, password, email, newUserData, user, error_1, errorMessage, statusCode;
+    var _a, username, password, email, newUserData, error_1, errorMessage, statusCode;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 _a = req.body, username = _a.username, password = _a.password, email = _a.email;
                 newUserData = { username: username, password: password, email: email };
-                user = new userControllerClass_1.default();
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, user.createNewUser(newUserData)];
+                return [4 /*yield*/, userController.createNewUser(newUserData)];
             case 2:
                 _b.sent();
                 res.status(200).json({ message: 'User created' });
@@ -83,17 +88,16 @@ app.post('/createUser', function (req, res) { return __awaiter(void 0, void 0, v
     });
 }); });
 app.post('/login', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, email, password, credentials, tokenHandler, loginToken, error_2;
+    var _a, email, password, credentials, loginToken, error_2;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 _a = req.body, email = _a.email, password = _a.password;
                 credentials = { email: email, password: password };
-                tokenHandler = new authServicesClass_1.default();
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, tokenHandler.createLoginToken(credentials)];
+                return [4 /*yield*/, authServices.createLoginTokenIfValidCredentials(credentials)];
             case 2:
                 loginToken = _b.sent();
                 res.status(200).json({ loginToken: loginToken });
@@ -107,20 +111,18 @@ app.post('/login', function (req, res) { return __awaiter(void 0, void 0, void 0
     });
 }); });
 app.post('/addNewItem', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, loginToken, newItem, tokenHandler, item, validUserId, listedItem, error_3;
+    var _a, loginToken, newItem, validToken, listedItem, error_3;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 _a = req.body, loginToken = _a.loginToken, newItem = _a.newItem;
-                tokenHandler = new authServicesClass_1.default();
-                item = new itemControllerClass_1.default();
                 _b.label = 1;
             case 1:
                 _b.trys.push([1, 4, , 5]);
-                return [4 /*yield*/, tokenHandler.validateLoginToken(loginToken)];
+                return [4 /*yield*/, authServices.validateLoginToken(loginToken)];
             case 2:
-                validUserId = _b.sent();
-                return [4 /*yield*/, item.addNewItemForSale(newItem, validUserId)];
+                validToken = _b.sent();
+                return [4 /*yield*/, itemController.addNewItemForSale(newItem, validToken.id)];
             case 3:
                 listedItem = _b.sent();
                 res.status(200).json({ progress: 'Item listed', listedItem: listedItem });
@@ -134,20 +136,18 @@ app.post('/addNewItem', function (req, res) { return __awaiter(void 0, void 0, v
     });
 }); });
 app.get('/getUserItems', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var loginToken, tokenHandler, items, userId, userItems, error_4;
+    var loginToken, validToken, userItems, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 loginToken = req.body.loginToken;
-                tokenHandler = new authServicesClass_1.default();
-                items = new itemFinderClass_1.default();
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 4, , 5]);
-                return [4 /*yield*/, tokenHandler.validateLoginToken(loginToken)];
+                return [4 /*yield*/, authServices.validateLoginToken(loginToken)];
             case 2:
-                userId = _a.sent();
-                return [4 /*yield*/, items.findUserItems(userId)];
+                validToken = _a.sent();
+                return [4 /*yield*/, itemFinder.findUserItems(validToken.id)];
             case 3:
                 userItems = _a.sent();
                 res.status(200).json(userItems);
@@ -161,16 +161,15 @@ app.get('/getUserItems', function (req, res) { return __awaiter(void 0, void 0, 
     });
 }); });
 app.get('/simpleSearch', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var searchString, items, searchResult, error_5;
+    var searchString, searchResult, error_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 searchString = req.query.searchString;
-                items = new itemFinderClass_1.default();
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, items.findItemsMatchingSearchString(searchString)];
+                return [4 /*yield*/, itemFinder.findItemsMatchingSearchString(searchString)];
             case 2:
                 searchResult = _a.sent();
                 res.status(200).json(searchResult);
