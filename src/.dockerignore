@@ -1,7 +1,14 @@
 node_modules
 prisma/migrations
+.env
+
 .eslint.yml
 .prettierrc.yml
+
 .gitignore
-tsconfig.json
+.git
+
 *.ts
+tsconfig.json
+
+Dockerfile
