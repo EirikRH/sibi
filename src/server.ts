@@ -64,7 +64,7 @@ app.post('/addNewItem', async (req, res) => {
 
     res.status(200).json({ progress: 'Item listed', listedItem });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error, msg: error.message });
   }
 });
 
@@ -93,5 +93,6 @@ app.get('/simpleSearch', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT} 
+Remember to select appropriat DB-URL`);
 });

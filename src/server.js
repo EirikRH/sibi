@@ -127,7 +127,7 @@ app.post('/addNewItem', function (req, res) { return __awaiter(void 0, void 0, v
                 return [3 /*break*/, 5];
             case 4:
                 error_3 = _b.sent();
-                res.status(500).json({ error: error_3.message });
+                res.status(500).json({ error: error_3, msg: error_3.message });
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
         }
@@ -180,5 +180,5 @@ app.get('/simpleSearch', function (req, res) { return __awaiter(void 0, void 0, 
     });
 }); });
 app.listen(PORT, function () {
-    console.log("Server is running on port ".concat(PORT));
+    console.log("Server is running on port ".concat(PORT, " \nRemember to select appropriat DB-URL"));
 });
