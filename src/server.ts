@@ -5,17 +5,17 @@ const dotenv = require('dotenv');
 dotenv.config();
 /*use for image handling - https://www.npmjs.com/package/multer*/
 
-import CrudUserController from './classes/userControllerClass';
-import CrudItemController from './classes/itemControllerClass';
-import UserAuthServices from './classes/authServicesClass';
-import JwtTokenController from './classes/tokenControllerClass';
-import DatabaseItemFinder from './classes/itemFinderClass';
+import CrudUserController, { UserController } from './classes/userControllerClass';
+import CrudItemController, { ItemController } from './classes/itemControllerClass';
+import UserAuthServices, { AuthServices } from './classes/authServicesClass';
+import JwtTokenController, { TokenController } from './classes/tokenControllerClass';
+import DatabaseItemFinder, { ItemFinder } from './classes/itemFinderClass';
 
-const tokenController = new JwtTokenController(process.env.SECRET_KEY!);
-const authServices = new UserAuthServices(tokenController);
-const itemController = new CrudItemController();
-const userController = new CrudUserController();
-const itemFinder = new DatabaseItemFinder();
+const tokenController: TokenController = new JwtTokenController(process.env.SECRET_KEY!);
+const authServices: AuthServices = new UserAuthServices(tokenController);
+const itemController: ItemController = new CrudItemController();
+const userController: UserController = new CrudUserController();
+const itemFinder: ItemFinder = new DatabaseItemFinder();
 
 const PORT = process.env.PORT!;
 
